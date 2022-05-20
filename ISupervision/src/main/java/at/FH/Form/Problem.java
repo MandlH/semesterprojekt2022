@@ -1,6 +1,10 @@
 package at.FH.Form;
 
+import at.FH.User.Registration;
+
 import javax.swing.*;
+import javax.swing.border.Border;
+import java.awt.*;
 import java.awt.event.*;
 
 public class Problem extends JDialog {
@@ -8,11 +12,14 @@ public class Problem extends JDialog {
     private JButton buttonSend;
     private JButton buttonCancel;
     private JPanel jp4;
-    private JTextField firstname;
-    private JTextField secondname;
-    private JTextField email;
-    private JTextArea textArea1;
-    private JComboBox comboBox1;
+    private JTextField txt_firstname;
+    private JTextField txt_secondname;
+    private JTextField txt_email;
+    private JTextArea ta_area;
+    private JComboBox cb_problem;
+
+
+    private static final Style style = new Style();
 
     public Problem() {
         setContentPane(contentPane);
@@ -21,7 +28,6 @@ public class Problem extends JDialog {
 
         buttonSend.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if(!secondname.getText().equals("") && !firstname.getText().equals("") && !email.getText().equals(""))
                     onOK();
             }
         });
@@ -50,8 +56,16 @@ public class Problem extends JDialog {
 
     private void onOK() {
         // add your code here
-        dispose();
+        if(!txt_firstname.getText().isEmpty() && !txt_secondname.getText().isEmpty() && !txt_email.getText().isEmpty()){
+            Registration reg = new Registration(
+                    txt_email.getText(), cb_problem.getSelectedItem().toString(), txt_firstname.getText(), txt_secondname.getText(), ta_area.getText()
+            );
+        } else {
+            style.setMainPanel(contentPane);
+            repaint();
+        }
     }
+
 
     private void onCancel() {
         // add your code here if necessary
@@ -67,7 +81,6 @@ public class Problem extends JDialog {
     private void set(){
         setTitle("Login");
 
-        Style style = new Style();
         style.setMainPanel(contentPane);
 
         setResizable(false);

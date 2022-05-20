@@ -2,7 +2,11 @@ package at.FH.User;
 
 import at.FH.Database.HibernateSupport;
 import at.FH.General.ISaveAndDelete;
+import at.FH.Task.Project;
+
 import javax.persistence.*;
+import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Table(name = "user")
@@ -13,6 +17,9 @@ public abstract class User implements ISaveAndDelete {
     private String email;
 
     private String firstname, secondname, password;
+    private Date firstAccess, lastAccess;
+
+
 
     public User(){
 
@@ -23,6 +30,7 @@ public abstract class User implements ISaveAndDelete {
         this.firstname = firstname;
         this.password = password;
         this.secondname = secondname;
+        this.lastAccess = new Date();
     }
 
     @Override
@@ -67,5 +75,21 @@ public abstract class User implements ISaveAndDelete {
 
     public void setSecondname(String secondname) {
         this.secondname = secondname;
+    }
+
+    public Date getFirstAccess() {
+        return firstAccess;
+    }
+
+    public void setFirstAccess(Date firstAccess) {
+        this.firstAccess = firstAccess;
+    }
+
+    public Date getLastAccess() {
+        return lastAccess;
+    }
+
+    public void setLastAccess(Date lastAccess) {
+        this.lastAccess = lastAccess;
     }
 }

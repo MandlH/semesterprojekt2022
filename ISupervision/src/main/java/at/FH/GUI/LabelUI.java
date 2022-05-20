@@ -13,7 +13,8 @@ public class LabelUI extends BasicLabelUI {
 
     @Override
     public void paint(Graphics g, JComponent c) {
-
+        c.setForeground(Color.white);
+        c.setFont(c.getFont().deriveFont(15f));
         super.paint(g, c);
     }
 }

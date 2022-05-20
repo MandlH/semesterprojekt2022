@@ -1,6 +1,7 @@
 package at.FH.GUI;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.plaf.basic.BasicPanelUI;
 import java.awt.*;
 

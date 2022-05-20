@@ -137,7 +137,7 @@
                   <text value="Secondname*"/>
                 </properties>
               </component>
-              <component id="9cac1" class="javax.swing.JTextField" binding="firstname">
+              <component id="9cac1" class="javax.swing.JTextField" binding="txt_firstname">
                 <constraints>
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                     <preferred-size width="150" height="-1"/>
@@ -145,7 +145,7 @@
                 </constraints>
                 <properties/>
               </component>
-              <component id="ae6dc" class="javax.swing.JTextField" binding="secondname">
+              <component id="ae6dc" class="javax.swing.JTextField" binding="txt_secondname">
                 <constraints>
                   <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                     <preferred-size width="150" height="-1"/>
@@ -171,7 +171,7 @@
               <text value="Message"/>
             </properties>
           </component>
-          <component id="fd258" class="javax.swing.JTextField" binding="email">
+          <component id="fd258" class="javax.swing.JTextField" binding="txt_email">
             <constraints>
               <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
@@ -179,7 +179,7 @@
             </constraints>
             <properties/>
           </component>
-          <component id="d6090" class="javax.swing.JComboBox" binding="comboBox1" default-binding="true">
+          <component id="d6090" class="javax.swing.JComboBox" binding="cb_problem">
             <constraints>
               <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
@@ -194,7 +194,7 @@
           </component>
         </children>
       </grid>
-      <component id="d3eb1" class="javax.swing.JTextArea" binding="textArea1" default-binding="true">
+      <component id="d3eb1" class="javax.swing.JTextArea" binding="ta_area">
         <constraints>
           <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="50"/>

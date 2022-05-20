@@ -1,6 +1,13 @@
 package at.FH.Form;
 
 import at.FH.Database.Connection;
+import at.FH.Database.HibernateSupport;
+import at.FH.Exception.ObjectNotFound;
+import at.FH.General.Check;
+import at.FH.User.Admin;
+import at.FH.User.Assistant;
+import at.FH.User.LoggedInUser;
+import at.FH.User.Student;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,9 +18,15 @@ public class Login extends JDialog {
     private JButton buttonLogin;
     private JButton buttonCancel;
     private JButton canTLoginButton;
-    private JTextField textField1;
-    private JPasswordField passwordField1;
+    private JTextField txt_email;
+    private JPasswordField txt_password;
     private JLabel con;
+
+    private LoggedInUser user;
+
+    private static final Check checker = new Check();
+
+    private static final Style style = new Style();
 
     public Login() {
         setContentPane(contentPane);
@@ -30,7 +43,11 @@ public class Login extends JDialog {
 
         buttonLogin.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                onLogin();
+                try {
+                    onLogin();
+                } catch (ObjectNotFound ex) {
+                    ex.printStackTrace();
+                }
             }
         });
 
@@ -56,10 +73,43 @@ public class Login extends JDialog {
         }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
     }
 
-    private void onLogin() {
-        // add your code here
-        dispose();
+    private void onLogin() throws ObjectNotFound {
+        //TODO
+
+        if(!txt_email.getText().isEmpty() && txt_password.getPassword().length != 0){
+
+            Student student;
+            Admin admin;
+            Assistant assistant;
+
+            try{
+                admin = HibernateSupport.readOneObjectByID(Admin.class, txt_email.getText());
+                if(checker.checkPassword(txt_password.getPassword(), admin.getPassword())){
+                    user = new LoggedInUser(admin);
+                    dispose();
+                }
+            }catch (NullPointerException ignore){}
+
+            try{
+                assistant = HibernateSupport.readOneObjectByID(Assistant.class, txt_email.getText());
+                if(checker.checkPassword(txt_password.getPassword(), assistant.getPassword())){
+                    user = new LoggedInUser(assistant);
+                    dispose();
+                }
+            }catch (NullPointerException ignore){}
+
+            try {
+                student = HibernateSupport.readOneObjectByID(Student.class, txt_email.getText());
+                if(checker.checkPassword(txt_password.getPassword(), student.getPassword())){
+                    user = new LoggedInUser(student);
+                    dispose();
+                }
+            }catch (NullPointerException ignore){}
+        } else {
+            set();
+        }
     }
+
 
     private void onCancel() {
         // add your code here if necessary
@@ -75,7 +125,6 @@ public class Login extends JDialog {
     private void set(){
         setTitle("Login");
 
-        Style style = new Style();
         style.setMainPanel(contentPane);
 
         if(Connection.hostAvailable()){
@@ -86,6 +135,8 @@ public class Login extends JDialog {
             con.setText("Connection: Offline");
             con.setForeground(Color.red);
         }
+
+        setAlwaysOnTop(true);
 
         setResizable(false);
         setSize(400, 200);

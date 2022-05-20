@@ -1,20 +1,18 @@
 package at.FH.User;
 
 import at.FH.Database.HibernateSupport;
+import at.FH.General.ILoggedIn;
 import at.FH.General.ISaveAndDelete;
 
 import javax.persistence.*;
 
-@Entity
-public class Assistant extends User implements ISaveAndDelete {
+@Entity(name = "assistant")
+public class Assistant extends User implements ISaveAndDelete, ILoggedIn {
 
     @SuppressWarnings("unused")
-    private Assistant(){
+    public Assistant(){
 
     }
-
-    @Column(unique = true)
-    private int pnr;
 
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -22,14 +20,6 @@ public class Assistant extends User implements ISaveAndDelete {
     public Assistant(String email, String firstname, String password, String secondname){
         super(email, firstname, password, secondname);
         this.role = Role.ASSISTANT;
-    }
-
-    public void setPnr(int pnr) {
-        this.pnr = pnr;
-    }
-
-    public int getPnr() {
-        return pnr;
     }
 
     @Override
@@ -45,4 +35,8 @@ public class Assistant extends User implements ISaveAndDelete {
         HibernateSupport.deleteObject(this);
     }
 
+    @Override
+    public String show() {
+        return getFirstname();
+    }
 }
