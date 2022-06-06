@@ -473,14 +473,15 @@ public class Project extends JDialog {
         style.setMainPanel(contentPane);
 
 
-        setSize(GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().width / 4,
+        Dimension minSize = new Dimension(GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().width / 4,
                 GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height / 2);
-        Dimension dim = new Dimension(450, 450);
-        setMinimumSize(dim);
+        Dimension dim = new Dimension(850, 750);
+        setSize(dim);
+        setMinimumSize(minSize);
 
         setAlwaysOnTop(true);
 
-        setResizable(false);
+        setResizable(true);
         setLocationRelativeTo(null);
     }
 }
