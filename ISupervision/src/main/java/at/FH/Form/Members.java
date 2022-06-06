@@ -103,8 +103,7 @@ public class Members extends JDialog {
         setAlwaysOnTop(true);
 
         style.setMainPanel(contentPane);
-        Dimension minSize = new Dimension(GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().width / 4,
-                GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height / 2);
+        Dimension minSize = new Dimension(650,550);
         Dimension dim = new Dimension(850, 750);
         setSize(dim);
         setMinimumSize(minSize);
