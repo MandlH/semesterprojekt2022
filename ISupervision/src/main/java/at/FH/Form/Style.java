@@ -23,6 +23,10 @@ public class Style {
         getAllElements(pane);
     }
 
+    /**
+     * Recursive method that formats all objects in a panel
+     * @param panel
+     */
     private void getAllElements(JPanel panel){
         if(panel != null){
             for (Component myComp : panel.getComponents()) {
@@ -34,6 +38,10 @@ public class Style {
         }
     }
 
+    /**
+     * Recursive method that formats all objects in a pane
+     * @param panel
+     */
     private void getAllElements(JTabbedPane panel){
         if(panel != null){
             for (Component myComp : panel.getComponents()) {
@@ -45,6 +53,10 @@ public class Style {
         }
     }
 
+    /**
+     * format the single comps
+     * @param myComp
+     */
     private void useStyle(Component myComp){
         if(myComp instanceof JPanel panel){
             panel.setUI(new PanelUI());

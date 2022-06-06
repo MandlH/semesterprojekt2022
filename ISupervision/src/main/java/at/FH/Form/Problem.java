@@ -1,11 +1,17 @@
 package at.FH.Form;
 
+import at.FH.User.Admin;
+import at.FH.User.Assistant;
 import at.FH.User.Registration;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Arrays;
+
+import at.FH.Database.HibernateSupport;
+import at.FH.Form.Message;
 
 public class Problem extends JDialog {
     private JPanel contentPane;
@@ -17,10 +23,17 @@ public class Problem extends JDialog {
     private JTextField txt_email;
     private JTextArea ta_area;
     private JComboBox cb_problem;
+    private JPasswordField pw_password1;
+    private JPasswordField pw_password2;
+    private static final Message message = new Message();
+    private static final at.FH.General.Check check = new at.FH.General.Check();
 
 
     private static final Style style = new Style();
 
+    /**
+     * Constructor set all Listener and default settings
+     */
     public Problem() {
         setContentPane(contentPane);
         setModal(true);
@@ -54,30 +67,56 @@ public class Problem extends JDialog {
         }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
     }
 
+    /**
+     * Checks whether all fields are filled out and whether the new user does not exist yet
+     */
     private void onOK() {
-        // add your code here
-        if(!txt_firstname.getText().isEmpty() && !txt_secondname.getText().isEmpty() && !txt_email.getText().isEmpty()){
+        String pw1 = new String(pw_password1.getPassword());
+        String pw2 = new String(pw_password2.getPassword());
+        if(!txt_firstname.getText().isEmpty() && !txt_secondname.getText().isEmpty() && !txt_email.getText().isEmpty() && pw1.equals(pw2)
+        && check.checkEmailRegex(txt_email.getText())){
+            if(HibernateSupport.readOneObjectByID(Registration.class, txt_email.getText()) != null ||
+                    HibernateSupport.readOneObjectByID(Admin.class, txt_email.getText()) != null ||
+                    HibernateSupport.readOneObjectByID(Assistant.class, txt_email.getText()) != null ||
+                    HibernateSupport.readOneObjectByID(Student.class, txt_email.getText()) != null){
+                message.open("User already exist");
+                return;
+            }
+
+
             Registration reg = new Registration(
-                    txt_email.getText(), cb_problem.getSelectedItem().toString(), txt_firstname.getText(), txt_secondname.getText(), ta_area.getText()
-            );
+                    txt_email.getText(), cb_problem.getSelectedItem().toString(), txt_firstname.getText(), txt_secondname.getText(), ta_area.getText(), pw1);
+            HibernateSupport.beginTransaction();
+            reg.save();
+            HibernateSupport.commitTransaction();
+            message.open("Your request got successfully sent");
+            dispose();
         } else {
             style.setMainPanel(contentPane);
             repaint();
         }
     }
 
-
+    /**
+     * Close the problem form
+     */
     private void onCancel() {
         // add your code here if necessary
         dispose();
     }
 
+    /**
+     * Open the problem form
+     */
     public void open(){
         pack();
         set();
         setVisible(true);
     }
 
+    /**
+     * set all properties of the problem form
+     */
     private void set(){
         setTitle("Login");
 

@@ -21,13 +21,17 @@ public class Login extends JDialog {
     private JTextField txt_email;
     private JPasswordField txt_password;
     private JLabel con;
+    private JPanel p_loginInformation;
 
     private LoggedInUser user;
 
-    private static final Check checker = new Check();
-
+    private static final Check check = new Check();
     private static final Style style = new Style();
+    private static final Message message = new Message();
 
+    /**
+     * Constructor set all Listener and default settings
+     */
     public Login() {
         setContentPane(contentPane);
         setModal(true);
@@ -73,55 +77,81 @@ public class Login extends JDialog {
         }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
     }
 
+    /**
+     * checks all criteria for login
+     * @throws ObjectNotFound
+     */
     private void onLogin() throws ObjectNotFound {
         //TODO
 
-        if(!txt_email.getText().isEmpty() && txt_password.getPassword().length != 0){
-
-            Student student;
-            Admin admin;
-            Assistant assistant;
-
-            try{
-                admin = HibernateSupport.readOneObjectByID(Admin.class, txt_email.getText());
-                if(checker.checkPassword(txt_password.getPassword(), admin.getPassword())){
-                    user = new LoggedInUser(admin);
-                    dispose();
+        for(Component c : p_loginInformation.getComponents()){
+            if(c instanceof JTextField textField ){
+                if(check.notEmpty(textField.getText())){
+                    set();
+                    return;
                 }
-            }catch (NullPointerException ignore){}
-
-            try{
-                assistant = HibernateSupport.readOneObjectByID(Assistant.class, txt_email.getText());
-                if(checker.checkPassword(txt_password.getPassword(), assistant.getPassword())){
-                    user = new LoggedInUser(assistant);
-                    dispose();
-                }
-            }catch (NullPointerException ignore){}
-
-            try {
-                student = HibernateSupport.readOneObjectByID(Student.class, txt_email.getText());
-                if(checker.checkPassword(txt_password.getPassword(), student.getPassword())){
-                    user = new LoggedInUser(student);
-                    dispose();
-                }
-            }catch (NullPointerException ignore){}
-        } else {
-            set();
+            }
         }
+
+        if (!check.checkEmailRegex(txt_email.getText())){
+            message.open("no valid e-mail address");
+            return;
+        }
+
+
+        Student student;
+        Admin admin;
+        Assistant assistant;
+
+        try{
+            admin = HibernateSupport.readOneObjectByID(Admin.class, txt_email.getText());
+            if(check.checkPassword(txt_password.getPassword(), admin.getPassword())){
+                user = new LoggedInUser(admin);
+                dispose();
+                return;
+            }
+        }catch (NullPointerException ignore){}
+
+        try{
+            assistant = HibernateSupport.readOneObjectByID(Assistant.class, txt_email.getText());
+            if(check.checkPassword(txt_password.getPassword(), assistant.getPassword())){
+                user = new LoggedInUser(assistant);
+                dispose();
+                return;
+            }
+        }catch (NullPointerException ignore){}
+
+        try {
+            student = HibernateSupport.readOneObjectByID(Student.class, txt_email.getText());
+            if(check.checkPassword(txt_password.getPassword(), student.getPassword())){
+                user = new LoggedInUser(student);
+                dispose();
+                return;
+            }
+        }catch (NullPointerException ignore){}
+        message.open("Wrong E-Mail or Password");
     }
 
-
+    /**
+     * Close the login form
+     */
     private void onCancel() {
         // add your code here if necessary
         dispose();
     }
 
+    /**
+     * open the login form
+     */
     public void open(){
         pack();
         set();
         setVisible(true);
     }
 
+    /**
+     * set all properties of the login form
+     */
     private void set(){
         setTitle("Login");
 
@@ -129,11 +159,9 @@ public class Login extends JDialog {
 
         if(Connection.hostAvailable()){
             con.setText("Connection: Online");
-            con.setForeground(Color.GREEN);
         }
         else{
             con.setText("Connection: Offline");
-            con.setForeground(Color.red);
         }
 
         setAlwaysOnTop(true);
@@ -141,7 +169,5 @@ public class Login extends JDialog {
         setResizable(false);
         setSize(400, 200);
         setLocationRelativeTo(null);
-
     }
-
 }

@@ -4,17 +4,15 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import at.FH.Task.Bachelor;
+import at.FH.Task.Master;
 import at.FH.Task.Project;
 import at.FH.Task.Task;
 import at.FH.User.*;
-import org.hibernate.Criteria;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+import org.hibernate.*;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.metadata.ClassMetadata;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.service.ServiceRegistryBuilder;
 
@@ -51,6 +49,8 @@ public class HibernateSupport {
         configuration.addAnnotatedClass(Registration.class);
         configuration.addAnnotatedClass(Task.class);
         configuration.addAnnotatedClass(Project.class);
+        configuration.addAnnotatedClass(Master.class);
+        configuration.addAnnotatedClass(Bachelor.class);
 
 
         configuration.configure(configFile);
@@ -107,5 +107,4 @@ public class HibernateSupport {
     public static <T> void deleteObject(T objectToDelete) {
         getCurrentSession().delete(objectToDelete);
     }
-
 }

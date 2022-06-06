@@ -1,107 +1,72 @@
 package at.FH.User;
 
-import at.FH.Database.HibernateSupport;
-import at.FH.General.ILoggedIn;
-import at.FH.General.ISaveAndDelete;
+import at.FH.Task.Bachelor;
+import at.FH.Task.Master;
 import at.FH.Task.Project;
-import com.mchange.util.StringObjectMap;
-import jakarta.persistence.NamedAttributeNode;
-import jakarta.persistence.NamedEntityGraph;
-import jakarta.transaction.Transactional;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 @Entity(name = "student")
-public class Student extends User implements ISaveAndDelete, ILoggedIn {
+public class Student extends User {
+
+    @OneToMany(cascade = { CascadeType.ALL }, orphanRemoval = true)
+    private List<Project> projects = new ArrayList<>();
+
+    @OneToMany(cascade = { CascadeType.ALL }, orphanRemoval = true)
+    private List<Master> masters = new ArrayList<>();
+
+    @OneToMany(cascade = { CascadeType.ALL }, orphanRemoval = true)
+    private List<Bachelor> bachelors = new ArrayList<>();
+
 
     @SuppressWarnings("unused")
     public Student(){
 
     }
 
-    @Enumerated(EnumType.STRING)
-    private Role role;
-
-    private int matriculationNumber;
     private Date vintage;
-    private String Course;
 
-    @OneToMany
-    @JoinColumn(name = "email")
-    private List<Project> projects;
-
-
-    public Student(String email, String firstname, String password, String secondname){
-        super(email, firstname, password, secondname);
-        this.role = Role.STUDENT;
+    public Student(String email, String firstname, String password, String lastname, Date firstAccess){
+        super(email, firstname, password, lastname, firstAccess);
     }
 
-    @Override
-    public boolean save() {
-        if(!HibernateSupport.commit(this))
-            return false;
-
-        return true;
+    public void setProjects(List<Project> projects) {
+        this.projects = projects;
     }
 
-    @Override
-    public void delete() {
-        HibernateSupport.deleteObject(this);
+    public void addProject(Project project){
+        this.projects.add(project);
     }
 
-    @Override
-    public String show() {
-        return getFirstname();
+    public List<Master> getMasters() {
+        return masters;
     }
 
-    public Role getRole() {
-        return role;
+    public void setMasters(List<Master> masters) {
+        this.masters = masters;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    public void addMasters(Master master) {
+        this.masters.add(master);
     }
 
-    public int getMatrikelnumber() {
-        return matriculationNumber;
+    public List<Bachelor> getBachelors() {
+        return bachelors;
     }
 
-    public void setMatrikelnumber(int matrikelnumber) {
-        this.matriculationNumber = matrikelnumber;
+    public void setBachelors(List<Bachelor> bachelors) {
+        this.bachelors = bachelors;
     }
 
-    public Date getVintage() {
-        return vintage;
-    }
-
-    public void setVintage(Date vintage) {
-        this.vintage = vintage;
-    }
-
-    public String getCourse() {
-        return Course;
-    }
-
-    public void setCourse(String course) {
-        Course = course;
-    }
-
-    public int getMatriculationNumber() {
-        return matriculationNumber;
-    }
-
-    public void setMatriculationNumber(int matriculationNumber) {
-        this.matriculationNumber = matriculationNumber;
+    public void addBachelor(Bachelor bachelor) {
+        this.bachelors.add(bachelor);
     }
 
     public List<Project> getProjects() {
         return projects;
     }
 
-    public void setProjects(List<Project> projects) {
-        this.projects = projects;
-    }
 }

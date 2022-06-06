@@ -2,11 +2,14 @@ package at.FH.User;
 
 import at.FH.Database.HibernateSupport;
 import at.FH.General.ISaveAndDelete;
+import at.FH.Task.Bachelor;
+import at.FH.Task.Master;
 import at.FH.Task.Project;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "user")
@@ -16,7 +19,7 @@ public abstract class User implements ISaveAndDelete {
     @Id
     private String email;
 
-    private String firstname, secondname, password;
+    private String firstname, lastname, password;
     private Date firstAccess, lastAccess;
 
 
@@ -25,12 +28,13 @@ public abstract class User implements ISaveAndDelete {
 
     }
 
-    public User(String email, String firstname, String password, String secondname){
+    public User(String email, String firstname, String password, String lastname, Date firstAccess){
         this.email = email;
         this.firstname = firstname;
         this.password = password;
-        this.secondname = secondname;
+        this.lastname = lastname;
         this.lastAccess = new Date();
+        this.firstAccess = firstAccess;
     }
 
     @Override
@@ -69,12 +73,12 @@ public abstract class User implements ISaveAndDelete {
         this.email = email;
     }
 
-    public String getSecondname() {
-        return secondname;
+    public String getLastname() {
+        return lastname;
     }
 
-    public void setSecondname(String secondname) {
-        this.secondname = secondname;
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
     }
 
     public Date getFirstAccess() {
@@ -92,4 +96,6 @@ public abstract class User implements ISaveAndDelete {
     public void setLastAccess(Date lastAccess) {
         this.lastAccess = lastAccess;
     }
+
+
 }

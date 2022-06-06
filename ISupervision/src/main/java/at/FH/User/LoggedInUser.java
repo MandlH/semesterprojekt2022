@@ -1,101 +1,96 @@
 package at.FH.User;
 
 import at.FH.Database.HibernateSupport;
-import at.FH.Exception.BufferedWriter;
-import at.FH.Exception.ObjectNotFound;
-import at.FH.General.ILoggedIn;
-
+import at.FH.Task.Bachelor;
+import at.FH.Task.Master;
 import at.FH.Task.Project;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import at.FH.General.ISaveAndDelete;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
-public class LoggedInUser implements ISaveAndDelete {
+public class LoggedInUser{
 
 
     private Admin admin;
     private Student student;
     private Assistant assistant;
-    private static final Logger logger = LogManager.getLogger();
-    private static List<Criterion> criterions = new ArrayList<Criterion>();
-    private static List<Project> pList;
-    private static List<Project> bList;
-    private static List<Project> mList;
+    private static final List<Criterion> criterions = new ArrayList<>();
+    private final Role role;
 
 
     public LoggedInUser(Admin admin){
         this.admin = admin;
-        logInfo();
+        role = Role.ADMIN;
+        criterions.add(Restrictions.isNotNull("email"));
+        this.admin.setProjects(HibernateSupport.readMoreObjects(Project.class, criterions));
+        this.admin.setBachelors(HibernateSupport.readMoreObjects(Bachelor.class, criterions));
+        this.admin.setMasters(HibernateSupport.readMoreObjects(Master.class, criterions));
+
+        at.FH.Form.Student form = new at.FH.Form.Student();
+        form.open(this);
+
+        this.admin.setLastAccess(new Date());
+        HibernateSupport.beginTransaction();
+        this.admin.save();
+        HibernateSupport.commitTransaction();
+
     }
 
     public LoggedInUser(Student student){
         this.student = student;
+        role = Role.STUDENT;
 
-        criterions.add(Restrictions.eq("student", student));
+        criterions.add(Restrictions.eq("email", this.student.getEmail()));
+        this.student.setProjects(HibernateSupport.readMoreObjects(Project.class, criterions));
+        this.student.setBachelors(HibernateSupport.readMoreObjects(Bachelor.class, criterions));
+        this.student.setMasters(HibernateSupport.readMoreObjects(Master.class, criterions));
 
-        pList = HibernateSupport.readMoreObjects(Project.class, criterions);
-
-        student.setProjects(pList);
-        
         at.FH.Form.Student form = new at.FH.Form.Student();
-        form.open(this.student);
-        logInfo();
+        form.open(this);
+
+        this.student.setLastAccess(new Date());
+        HibernateSupport.beginTransaction();
+        this.student.save();
+        HibernateSupport.commitTransaction();
     }
 
     public LoggedInUser(Assistant assistant){
         this.assistant = assistant;
-        logInfo();
+        role = Role.ASSISTANT;
+
+        criterions.add(Restrictions.eq("assistant_mail", this.assistant.getEmail()));
+        this.assistant.setProjects(HibernateSupport.readMoreObjects(Project.class, criterions));
+        this.assistant.setBachelors(HibernateSupport.readMoreObjects(Bachelor.class, criterions));
+        this.assistant.setMasters(HibernateSupport.readMoreObjects(Master.class, criterions));
+
+        at.FH.Form.Student form = new at.FH.Form.Student();
+        form.open(this);
+
+        this.assistant.setLastAccess(new Date());
+        HibernateSupport.beginTransaction();
+        this.assistant.save();
+        HibernateSupport.commitTransaction();
+
     }
 
-    private void clearList(){
-        pList.clear();
-        mList.clear();
-        bList.clear();
+
+    public Student getStudent() {
+        return student;
     }
 
-
-
-
-    private String showName(){
-        if(admin != null)
-            return admin.show();
-        if(assistant != null)
-            return assistant.show();
-        if(student != null)
-            return student.show();
-        return "No User";
+    public Assistant getAssistant() {
+        return assistant;
     }
 
-    private void logInfo(){
-        logger.info("User " + showName() + " successfully logged in");
+    public Admin getAdmin() {
+        return admin;
     }
 
-    @Override
-    public boolean save(){
-        if(admin != null)
-            admin.save();
-        if(assistant != null)
-            assistant.save();
-        if(student != null)
-            student.save();
-        return true;
+    public Role getRole() {
+        return role;
     }
-
-    @Override
-    public void delete() {
-        if(admin != null)
-            admin.delete();
-        if(assistant != null)
-            assistant.delete();
-        if(student != null)
-            student.delete();
-    }
-
 
 }
